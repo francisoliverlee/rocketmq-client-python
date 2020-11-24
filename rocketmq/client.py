@@ -71,6 +71,9 @@ def _to_bytes(s):
 class Message(object):
     def __init__(self, topic):
         self._handle = dll.CreateMessage(_to_bytes(topic))
+        
+    def __del__(self):
+        dll.DestroyMessage(self._handle)
 
     def set_keys(self, keys):
         ffi_check(dll.SetMessageKeys(self._handle, _to_bytes(keys)))
@@ -229,6 +232,9 @@ class Producer(object):
 
     def set_group(self, group_name):
         ffi_check(dll.SetProducerGroupName(self._handle, _to_bytes(group_name)))
+
+    def set_instance_name(self, name):
+        ffi_check(dll.SetProducerInstanceName(self._handle, _to_bytes(name)))
 
     def set_name_server_address(self, addr):
         ffi_check(dll.SetProducerNameServerAddress(self._handle, _to_bytes(addr)))
